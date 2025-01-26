@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Mafia</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Popular Movies</h1>
+        <div class="row">
+            <% movies.forEach(movie => { %>
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <img
+                            src="https://image.tmdb.org/t/p/w500<%= movie.poster_path %>"
+                            class="card-img-top"
+                            alt="<%= movie.title %>"
+                        />
+                        <div class="card-body">
+                            <h5 class="card-title"><%= movie.title %></h5>
+                            <p class="card-text">
+                                <%= movie.overview.substring(0, 150) %>...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</body>
+</html>

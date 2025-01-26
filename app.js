@@ -1,16 +1,19 @@
 const express = require("express");
+const path = require("path");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 const app = express();
 const PORT = 3000;
 
+app.use(express.static(path.join(__dirname, "public")));
+
 app.set("view engine", "ejs");
 
-app.use(express.static("public"));
+const moviesRoute = require("./routes/movies");
 
-
-app.get("/", (req, res) => {
-  res.render("index", { message: "Welcome to Movie Mafia" });
-});
+app.use("/", moviesRoute);
 
 app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
 });
