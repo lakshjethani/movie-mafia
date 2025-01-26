@@ -16,4 +16,5 @@ const moviesRoute = require("./routes/movies");
 app.use("/", moviesRoute);
 
 app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });

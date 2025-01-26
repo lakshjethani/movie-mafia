@@ -18,4 +18,19 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/movie/:id", async (req, res) => {
+  const movieId = req.params.id;
+  try {
+    const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}`, {
+      params: { api_key: TMDB_API_KEY },
+    });
+    res.render("pages/movie", { movie: response.data });
+  } catch (error) {
+    console.error("Error fetching movie details:", error.message);
+    res.status(500).send("Error fetching movie details");
+  }
+});
+
+
+
 module.exports = router;
