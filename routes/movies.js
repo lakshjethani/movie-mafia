@@ -5,15 +5,33 @@ const router = express.Router();
 require("dotenv").config();
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 router.get("/", async (req, res) => {
+  const genre = req.query.genre || ""; 
+  const sortBy = req.query.sort || "popularity.desc";
+
   try {
-    const response = await axios.get("https://api.themoviedb.org/3/movie/popular", {
+    const genreResponse = await axios.get(`${TMDB_BASE_URL}/genre/movie/list`, {
       params: { api_key: TMDB_API_KEY },
     });
-    res.render("pages/home", { movies: response.data.results });
+
+    const movieResponse = await axios.get(`${TMDB_BASE_URL}/discover/movie`, {
+      params: {
+        api_key: TMDB_API_KEY,
+        with_genres: genre || undefined, 
+        sort_by: sortBy,
+      },
+    });
+
+    res.render("pages/home", {
+      movies: movieResponse.data.results, 
+      genres: genreResponse.data.genres,  
+      selectedGenre: genre,  
+      sortBy: sortBy,  
+    });
   } catch (error) {
-    console.error("Error fetching popular movies:", error.message);
+    console.error("Error fetching data:", error.message);
     res.status(500).send("Error fetching data");
   }
 });
@@ -21,7 +39,7 @@ router.get("/", async (req, res) => {
 router.get("/movie/:id", async (req, res) => {
   const movieId = req.params.id;
   try {
-    const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}`, {
+    const response = await axios.get(`${TMDB_BASE_URL}/movie/${movieId}`, {
       params: { api_key: TMDB_API_KEY },
     });
     res.render("pages/movie", { movie: response.data });
@@ -33,16 +51,22 @@ router.get("/movie/:id", async (req, res) => {
 
 router.get("/search", async (req, res) => {
   const query = req.query.q;
+  const sortBy = req.query.sort || "popularity.desc"; 
   try {
-    const response = await axios.get("https://api.themoviedb.org/3/search/movie", {
-      params: { query, api_key: TMDB_API_KEY },
+    const response = await axios.get(`${TMDB_BASE_URL}/search/movie`, {
+      params: { query, api_key: TMDB_API_KEY, sort_by: sortBy },
     });
-    res.render("pages/home", { movies: response.data.results });
+
+    res.render("pages/home", {
+      movies: response.data.results,
+      genres: [], 
+      selectedGenre: "",
+      sortBy: sortBy
+    });
   } catch (error) {
     console.error("Error fetching search results:", error.message);
     res.status(500).send("Error fetching search results");
   }
 });
-
 
 module.exports = router;
