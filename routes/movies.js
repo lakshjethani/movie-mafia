@@ -68,17 +68,29 @@ router.get("/movie/:id", async (req, res) => {
 
 router.get("/search", async (req, res) => {
   const query = req.query.q;
+  const genre = req.query.genre || "";
   const sortBy = req.query.sort || "popularity.desc"; 
+  let currentPage = parseInt(req.query.page) || 1; 
+  
   try {
+  const genreResponse = await axios.get(`${TMDB_BASE_URL}/genre/movie/list`, {
+    params: { api_key: TMDB_API_KEY },
+  });
+
     const response = await axios.get(`${TMDB_BASE_URL}/search/movie`, {
-      params: { query, api_key: TMDB_API_KEY, sort_by: sortBy },
+      params: { query, api_key: TMDB_API_KEY, sort_by: sortBy, page: currentPage, with_genres: genre || undefined,},
     });
+
+    const totalPages = response.data.total_pages;  
+    currentPage = Math.min(Math.max(currentPage, 1), totalPages);
 
     res.render("pages/home", {
       movies: response.data.results,
-      genres: [], 
-      selectedGenre: "",
-      sortBy: sortBy
+      genres: genreResponse.data.genres,
+      selectedGenre: genre,
+      sortBy: sortBy,
+      currentPage: currentPage,
+      totalPages: totalPages,
     });
   } catch (error) {
     console.error("Error fetching search results:", error.message);
