@@ -56,10 +56,31 @@ router.get("/", async (req, res) => {
 router.get("/movie/:id", async (req, res) => {
   const movieId = req.params.id;
   try {
-    const response = await axios.get(`${TMDB_BASE_URL}/movie/${movieId}`, {
+    const movieResponse = await axios.get(`${TMDB_BASE_URL}/movie/${movieId}`, {
       params: { api_key: TMDB_API_KEY },
     });
-    res.render("pages/movie", { movie: response.data });
+
+    const castResponse = await axios.get(`${TMDB_BASE_URL}/movie/${movieId}/credits`, {
+      params: { api_key: TMDB_API_KEY },
+    });
+
+    const reviewsResponse = await axios.get(`${TMDB_BASE_URL}/movie/${movieId}/reviews`, {
+      params: { api_key: TMDB_API_KEY },
+    });
+
+    const similarMoviesResponse = await axios.get(`${TMDB_BASE_URL}/movie/${movieId}/similar`, {
+      params: { api_key: TMDB_API_KEY },
+    });
+
+    res.render("pages/movie", {
+      movie: {
+        ...movieResponse.data,
+        cast: castResponse.data.cast,
+        crew: castResponse.data.crew,
+        reviews: reviewsResponse.data.results,
+        similar_movies: similarMoviesResponse.data.results,
+      },
+    });
   } catch (error) {
     console.error("Error fetching movie details:", error.message);
     res.status(500).send("Error fetching movie details");
@@ -91,6 +112,27 @@ router.get("/search", async (req, res) => {
   } catch (error) {
     console.error("Error fetching search results:", error.message);
     res.status(500).send("Error fetching search results");
+  }
+});
+
+router.get("/actor/:id", async (req, res) => {
+  const actorId = req.params.id;
+  try {
+    const actorResponse = await axios.get(`${TMDB_BASE_URL}/person/${actorId}`, {
+      params: { api_key: TMDB_API_KEY },
+    });
+
+    const creditsResponse = await axios.get(`${TMDB_BASE_URL}/person/${actorId}/movie_credits`, {
+      params: { api_key: TMDB_API_KEY },
+    });
+
+    res.render("pages/actor", {
+      actor: actorResponse.data,
+      movies: creditsResponse.data.cast,
+    });
+  } catch (error) {
+    console.error("Error fetching actor details:", error.message);
+    res.status(500).send("Error fetching actor details");
   }
 });
 module.exports = router;

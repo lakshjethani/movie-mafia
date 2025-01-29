@@ -35,11 +35,69 @@
         <p><strong>Release Date:</strong> <%= movie.release_date %></p>
         <p><strong>Overview:</strong> <%= movie.overview %></p>
         <p><strong>Rating:</strong> <%= movie.vote_average %> / 10</p>
+
+        <!-- Additional Movie Details -->
+        <div class="mt-4">
+        <h3>Cast</h3>
+        <ul class="list-inline">
+            <% movie.cast.slice(0, 5).forEach(cast => { %>
+            <li class="list-inline-item">
+                <a href="/actor/<%= cast.id %>">
+                <img src="https://image.tmdb.org/t/p/w200/<%= cast.profile_path %>" class="rounded-circle" alt="<%= cast.name %>" style="width: 50px;">
+                <p><%= cast.name %> as <%= cast.character %></p>
+                </a>
+            </li>
+            <% }) %>
+        </ul>
+        </div>
+
+        <div class="mt-4">
+          <h3>Crew</h3>
+          <ul class="list-inline">
+            <% movie.crew.slice(0, 5).forEach(crew => { %>
+              <li class="list-inline-item">
+                <p><%= crew.name %> - <%= crew.job %></p>
+              </li>
+            <% }) %>
+          </ul>
+        </div>
+
+        <div class="mt-4">
+          <h3>Reviews</h3>
+          <% if (movie.reviews.length > 0) { %>
+            <% movie.reviews.forEach(review => { %>
+              <div class="mb-3">
+                <strong><%= review.author %>:</strong>
+                <p><%= review.content %></p>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <p>No reviews available.</p>
+          <% } %>
+        </div>
+
+        <div class="mt-4">
+          <h3>Similar Movies</h3>
+          <div class="row">
+            <% movie.similar_movies.forEach(similarMovie => { %>
+              <div class="col-md-3">
+                <div class="card">
+                  <img src="https://image.tmdb.org/t/p/w500/<%= similarMovie.poster_path %>" class="card-img-top" alt="<%= similarMovie.title %>">
+                  <div class="card-body">
+                    <h5 class="card-title"><%= similarMovie.title %></h5>
+                    <p class="card-text"><%= similarMovie.overview.slice(0, 100) %>...</p>
+                    <a href="/movie/<%= similarMovie.id %>" class="btn btn-primary">View Details</a>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
   <footer class="bg-dark text-white text-center py-3">
     <p>&copy; 2025 Movie Mafia</p>
   </footer>
