@@ -104,6 +104,10 @@ section.container {
     background-color: #0056b3;
 }
 
+.genre-select {
+    width: 250px;
+}
+
 footer {
     background-color: #343a40;
     color: #f8f9fa;
