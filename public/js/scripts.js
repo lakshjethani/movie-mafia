@@ -17,3 +17,16 @@
         button.innerHTML = "Read More";
       }
     }
+    
+window.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('splashShown')) {
+        const splashScreen = document.getElementById('splashScreen');
+        splashScreen.classList.remove('hide');
+        setTimeout(() => {
+            splashScreen.classList.add('hide');
+            localStorage.setItem('splashShown', 'true');
+        }, 3000); 
+    } else {
+        document.getElementById('splashScreen').classList.add('hide');
+    }
+});

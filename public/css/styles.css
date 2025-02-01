@@ -206,6 +206,40 @@ form {
     margin-top: 20px;
 }
 
+.custom-btn {
+    background-color: #007bff;
+    color: white;
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.custom-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.custom-btn:focus {
+    outline: none;
+}
+
+.custom-btn.disabled {
+    background-color: #ccc;
+    color: #666;
+}
+
+.page-item.active .page-link {
+    background-color:
+    color:
+    border-color: #00bcd4;
+}
+
+.page-item .page-link {
+    border: 1px solid #ddd;
+}
+
 
 footer {
     background-color: #1c1c1c;
