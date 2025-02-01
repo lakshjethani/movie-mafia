@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= movie.title %> - MovieDB</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/loader.css">
   <script src="/js/loader.js"></script>
+  <script src="/js/scripts.js"></script>
+
 </head>
 <body>
 
@@ -17,44 +19,38 @@
 
     <header class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Movie Mafia</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/">Home</a>
-                    </li>
-                </ul>
+            <div class="d-flex justify-content-center w-100">
+                <a class="navbar-brand" href="/">Movie Mafia</a>
             </div>
         </div>
     </header>
 
   <section class="container my-5">
-    <div class="row">
-      <div class="col-md-4">
+    <div class="row align-items-start">
+      <div class="col-md-3 poster">
         <img src="https://image.tmdb.org/t/p/w500/<%= movie.poster_path %>" class="img-fluid" alt="<%= movie.title %>">
       </div>
-      <div class="col-md-8">
+      <div class="col-md-9 content">
         <h1><%= movie.title %></h1>
         <p><strong>Release Date:</strong> <%= movie.release_date %></p>
         <p><strong>Overview:</strong> <%= movie.overview %></p>
         <p><strong>Rating:</strong> <%= movie.vote_average %> / 10</p>
 
-        <!-- Additional Movie Details -->
         <div class="mt-4">
         <h3>Cast</h3>
-        <ul class="list-inline">
-            <% movie.cast.slice(0, 5).forEach(cast => { %>
-            <li class="list-inline-item">
-                <a href="/actor/<%= cast.id %>">
-                <img src="https://image.tmdb.org/t/p/w200/<%= cast.profile_path %>" class="rounded-circle" alt="<%= cast.name %>" style="width: 50px;">
-                <p><%= cast.name %> as <%= cast.character %></p>
-                </a>
-            </li>
-            <% }) %>
-        </ul>
+        <div class="actor-list">
+          <% movie.cast.slice(0, 5).forEach(cast => { %>
+            <div class="actor-container">
+              <a href="/actor/<%= cast.id %>">
+                <img src="https://image.tmdb.org/t/p/w200/<%= cast.profile_path %>" alt="<%= cast.name %>">
+              </a>
+              <div>
+                  <a href="/actor/<%= cast.id %>"><p><%= cast.name %></p></a>
+                <p class="actor-character">as <%= cast.character %></p>
+              </div>
+            </div>
+          <% }) %>
+        </div>
         </div>
 
         <div class="mt-4">
@@ -71,10 +67,18 @@
         <div class="mt-4">
           <h3>Reviews</h3>
           <% if (movie.reviews.length > 0) { %>
-            <% movie.reviews.forEach(review => { %>
-              <div class="mb-3">
+            <% movie.reviews.forEach((review, index) => { %>
+              <div class="mb-3" id="review-<%= index %>">
                 <strong><%= review.author %>:</strong>
-                <p><%= review.content %></p>
+                <p>
+                  <span id="review-text-<%= index %>">
+                    <%= review.content.substring(0, 100) %>...
+                  </span>
+                  <span id="full-review-<%= index %>" style="display:none;">
+                    <%= review.content %>
+                  </span>
+                </p>
+                <button class="btn btn-link p-0" onclick="toggleReview(<%= index %>)" id="review-btn-<%= index %>">Read More</button>
               </div>
             <% }) %>
           <% } else { %>
@@ -86,12 +90,11 @@
           <h3>Similar Movies</h3>
           <div class="row">
             <% movie.similar_movies.forEach(similarMovie => { %>
-              <div class="col-md-3">
+              <div class="col-md-3 py-2">
                 <div class="card">
                   <img src="https://image.tmdb.org/t/p/w500/<%= similarMovie.poster_path %>" class="card-img-top" alt="<%= similarMovie.title %>">
                   <div class="card-body">
                     <h5 class="card-title"><%= similarMovie.title %></h5>
-                    <p class="card-text"><%= similarMovie.overview.slice(0, 100) %>...</p>
                     <a href="/movie/<%= similarMovie.id %>" class="btn btn-primary">View Details</a>
                   </div>
                 </div>

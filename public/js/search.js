@@ -36,7 +36,7 @@ $(document).ready(function () {
                                     <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" class="card-img-top" alt="${movie.title}" />
                                     <div class="card-body">
                                         <h5 class="card-title">${movie.title}</h5>
-                                        <p class="card-text">${movie.overview.substring(0, 150)}...</p>
+                                        <p class="card-text">${movie.overview.substring(0, 100)}...</p>
                                         <a href="/movie/${movie.id}" class="btn btn-primary">Details</a>
                                     </div>
                                 </div>

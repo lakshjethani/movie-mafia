@@ -1,7 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
     const loader = document.getElementById("loader");
 
-    loader.classList.remove("hidden");
+    const navigationEntries = performance.getEntriesByType("navigation");
+    if (navigationEntries.length > 0 && navigationEntries[0].type === "back_forward") {
+        loader.classList.add("hidden");
+    } else {
+        loader.classList.remove("hidden");
+    }
 
     window.addEventListener("load", function () {
         loader.classList.add("hidden");
@@ -17,5 +22,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 loader.classList.remove("hidden");
             }
         });
+    });
+
+    window.addEventListener("pageshow", function (event) {
+        if (event.persisted) {
+            loader.classList.add("hidden");
+        }
     });
 });
