@@ -39,8 +39,8 @@ npm install
 
 ## Configuration
 
-You change the API_KEY in the .env file
-You change the PORT number in the app.js file
+You can change the API_KEY in the .env file
+You can change the PORT number in the app.js file
 
 ## Usage
 To run the project, follow these steps:
