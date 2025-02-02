@@ -27,7 +27,7 @@
     </div>
 </header>
 
-    <section class="container my-4">
+<section class="container my-4">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8">
             <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
@@ -36,12 +36,12 @@
                     <form action="/" method="get" class="search-bar">
                         <div class="input-group">
                             <input
-                                type="text"
                                 name="q"
                                 id="searchInput"
                                 class="form-control rounded-pill"
                                 placeholder="Search for a movie..."
                                 autocomplete="off"
+                                value="<%= searchQuery || '' %>"
                             />
                         </div>
                     </form>
@@ -50,7 +50,7 @@
                 <div class="d-flex align-items-center mb-3 mb-md-0">
                     <form action="/" method="get" id="genreForm">
                         <input type="hidden" name="page" id="pageInput" value="<%= currentPage %>">
-                        <select name="genre" id="genre" class="form-select rounded-pill genre-select">
+                        <select name="genre" id="genre" class="form-select rounded-pill genre-select" onchange="this.form.submit()">
                             <option value="" <% if (!selectedGenre) { %>selected<% } %>>All Genres</option>
                             <% genres.forEach(genre => { %>
                                 <option value="<%= genre.id %>" <% if (selectedGenre == genre.id) { %>selected<% } %>> 
@@ -79,42 +79,42 @@
     </div>
 </section>
 
-   <section class="container my-4">
-        <div class="row">
-            <div class="col-12 text-center">
-                <% if (selectedGenre) { %>
-                    <% const genreName = genres.find(g => g.id == selectedGenre)?.name || "Unknown Genre"; %>
-                    <h2 class="h4">Showing Movies in Genre: <strong><%= genreName %></strong></h2>
-                <% } else { %>
-                    <h2 class="h4">Showing Movies in <strong>All Genres</strong></h2>
-                <% } %>
-            </div>
+<section class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <% if (selectedGenre) { %>
+                <% const genreName = genres.find(g => g.id == selectedGenre)?.name || "Unknown Genre"; %>
+                <h2 class="h4">Showing Movies in Genre: <strong><%= genreName %></strong></h2>
+            <% } else { %>
+                <h2 class="h4">Showing Movies in <strong>All Genres</strong></h2>
+            <% } %>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4" id="movieResults">
-            <% movies.forEach(movie => { %>
-                <div class="col mb-4">
-                    <div class="card shadow-sm">
-                        <img src="<%= movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path : '/images/not-found.png' %>" class="card-img-top" alt="<%= movie.title %>">
-                        <div class="card-body">
-                            <h5 class="card-title"><%= movie.title %></h5>
-                            <p class="card-text"><%= movie.overview.substring(0, 100) %>...</p>
-                            <a href="/movie/<%= movie.id %>" class="btn btn-primary">Details</a>
-                        </div>
+<section class="container">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4" id="movieResults">
+        <% movies.forEach(movie => { %>
+            <div class="col mb-4">
+                <div class="card shadow-sm">
+                    <img src="<%= movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path : '/images/not-found.png' %>" class="card-img-top" alt="<%= movie.title %>">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= movie.title %></h5>
+                        <p class="card-text"><%= movie.overview.substring(0, 100) %>...</p>
+                        <a href="/movie/<%= movie.id %>" class="btn btn-primary">Details</a>
                     </div>
                 </div>
-            <% }) %>
-        </div>
-    </section>
+            </div>
+        <% }) %>
+    </div>
+</section>
 
-   <section class="container my-4">
+<section class="container my-4">
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <% if (currentPage > 1) { %>
                 <li class="page-item">
-                    <a class="page-link custom-btn" href="/?genre=<%= selectedGenre %>&sort=<%= sortBy %>&page=<%= currentPage - 1 %>">
+                    <a class="page-link custom-btn" href="/?q=<%= searchQuery %>&genre=<%= selectedGenre %>&sort=<%= sortBy %>&page=<%= currentPage - 1 %>">
                         <i class="fas fa-chevron-left"></i> Previous
                     </a>
                 </li>
@@ -138,13 +138,13 @@
                 for (let i = startPage; i <= endPage; i++) {
             %>
                 <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                    <a class="page-link" href="/?genre=<%= selectedGenre %>&sort=<%= sortBy %>&page=<%= i %>"><%= i %></a>
+                    <a class="page-link" href="/?q=<%= searchQuery %>&genre=<%= selectedGenre %>&sort=<%= sortBy %>&page=<%= i %>"><%= i %></a>
                 </li>
             <% } %>
 
             <% if (currentPage < totalPages) { %>
                 <li class="page-item">
-                    <a class="page-link custom-btn" href="/?genre=<%= selectedGenre %>&sort=<%= sortBy %>&page=<%= currentPage + 1 %>">
+                    <a class="page-link custom-btn" href="/?q=<%= searchQuery %>&genre=<%= selectedGenre %>&sort=<%= sortBy %>&page=<%= currentPage + 1 %>">
                         Next <i class="fas fa-chevron-right"></i>
                     </a>
                 </li>
@@ -157,12 +157,12 @@
     </nav>
 </section>
 
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <p>&copy; 2025 Movie Mafia</p>
-    </footer>
+<footer class="bg-dark text-white text-center py-3 mt-5">
+    <p>&copy; 2025 Movie Mafia</p>
+</footer>
 
-    <script src="/js/loader.js"></script>
-    <script src="/js/search.js"></script>
-    <script src="/js/scripts.js"></script>
+<script src="/js/loader.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/scripts.js"></script>
 </body>
 </html>

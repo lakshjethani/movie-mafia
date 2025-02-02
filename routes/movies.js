@@ -8,40 +8,51 @@ const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 router.get("/", async (req, res) => {
-  const genre = req.query.genre || "";
-  const sortBy = req.query.sort || "popularity.desc";
-  let currentPage = parseInt(req.query.page) || 1;
-
-  try {
-    const genreResponse = await axios.get(`${TMDB_BASE_URL}/genre/movie/list`, {
-        params: { api_key: TMDB_API_KEY },
-    });
-
-    const movieResponse = await axios.get(`${TMDB_BASE_URL}/discover/movie`, {
-        params: {
-          api_key: TMDB_API_KEY,
-          with_genres: genre || undefined,
-          sort_by: sortBy,
-          page: currentPage,
-        },
-    });
-
-    const totalPages = movieResponse.data.total_pages;
+    const { genre, sort, page, q } = req.query;
+    const currentPage = parseInt(page) || 1;
+    const sortBy = sort || "popularity.desc";
     
-    currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+    try {
+        const genreResponse = await axios.get(`${TMDB_BASE_URL}/genre/movie/list`, {
+            params: { api_key: TMDB_API_KEY },
+        });
 
-    res.render("pages/home", {
-      movies: movieResponse.data.results,
-      genres: genreResponse.data.genres,
-      selectedGenre: genre,
-      sortBy: sortBy,
-      currentPage: currentPage,
-      totalPages: totalPages,
-    });
-  } catch (error) {
-    console.error("Error fetching data:", error.message);
-    res.status(500).send("Error fetching data");
-  }
+        let movieResponse;
+        if (q) {
+            movieResponse = await axios.get(`${TMDB_BASE_URL}/search/movie`, {
+                params: {
+                    api_key: TMDB_API_KEY,
+                    query: q,
+                    page: currentPage,
+                },
+            });
+        } else {
+            movieResponse = await axios.get(`${TMDB_BASE_URL}/discover/movie`, {
+                params: {
+                    api_key: TMDB_API_KEY,
+                    with_genres: genre || undefined,
+                    sort_by: sortBy,
+                    page: currentPage,
+                },
+            });
+        }
+
+        const totalPages = movieResponse.data.total_pages;
+        const adjustedPage = Math.min(Math.max(currentPage, 1), totalPages);
+
+        res.render("pages/home", {
+            movies: movieResponse.data.results,
+            genres: genreResponse.data.genres,
+            selectedGenre: genre,
+            sortBy: sortBy,
+            currentPage: adjustedPage,
+            totalPages: totalPages,
+            searchQuery: q
+        });
+    } catch (error) {
+        console.error("Error fetching data:", error.message);
+        res.status(500).send("Error fetching data");
+    }
 });
 
 router.get("/movie/:id", async (req, res) => {
