@@ -25,7 +25,7 @@
   <section class="container my-5">
     <div class="row align-items-start">
       <div class="col-md-3 poster">
-        <img src="https://image.tmdb.org/t/p/w500/<%= movie.poster_path %>" class="img-fluid" alt="<%= movie.title %>">
+        <img src="<%= movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path : '/images/not-found.png' %>" class="img-fluid" alt="<%= movie.title %>">
       </div>
       <div class="col-md-9 content">
         <h1><%= movie.title %></h1>
@@ -39,7 +39,7 @@
           <% movie.cast.slice(0, 5).forEach(cast => { %>
             <div class="actor-container">
               <a href="/actor/<%= cast.id %>">
-                <img src="https://image.tmdb.org/t/p/w200/<%= cast.profile_path %>" alt="<%= cast.name %>">
+                <img src="<%= cast.profile_path ? 'https://image.tmdb.org/t/p/w200' + cast.profile_path : '/images/not-found1.png' %>" alt="<%= cast.name %>">
               </a>
               <div>
                   <a href="/actor/<%= cast.id %>"><p><%= cast.name %></p></a>
@@ -89,7 +89,7 @@
             <% movie.similar_movies.forEach(similarMovie => { %>
               <div class="col-md-3 py-2">
                 <div class="card">
-                  <img src="https://image.tmdb.org/t/p/w500/<%= similarMovie.poster_path %>" class="card-img-top" alt="<%= similarMovie.title %>">
+                <img src="<%= similarMovie.poster_path ? 'https://image.tmdb.org/t/p/w500' + similarMovie.poster_path : '/images/not-found.png' %>" class="card-img-top" alt="<%= similarMovie.title %>">
                   <div class="card-body">
                     <h5 class="card-title"><%= similarMovie.title %></h5>
                     <a href="/movie/<%= similarMovie.id %>" class="btn btn-primary">View Details</a>

@@ -1,6 +1,11 @@
-    document.getElementById("genre").addEventListener("change", function() {
-        document.getElementById("pageInput").value = 1; 
-        document.getElementById("genreForm").submit();
+    window.addEventListener('DOMContentLoaded', function () {
+    var genreElement = document.getElementById("genre");
+    if (genreElement) {
+        genreElement.addEventListener("change", function() {
+            document.getElementById("pageInput").value = 1; 
+            document.getElementById("genreForm").submit();
+        });
+    }
     });
     function toggleReview(index) {
       var fullReview = document.getElementById("full-review-" + index);
@@ -19,14 +24,16 @@
     }
     
 window.addEventListener('DOMContentLoaded', () => {
-    if (!localStorage.getItem('splashShown')) {
-        const splashScreen = document.getElementById('splashScreen');
-        splashScreen.classList.remove('hide');
-        setTimeout(() => {
+    const splashScreen = document.getElementById('splashScreen');
+    if (splashScreen) {
+        if (!localStorage.getItem('splashShown')) {
+            splashScreen.classList.remove('hide');
+            setTimeout(() => {
+                splashScreen.classList.add('hide');
+                localStorage.setItem('splashShown', 'true');
+            }, 3000); 
+        } else {
             splashScreen.classList.add('hide');
-            localStorage.setItem('splashShown', 'true');
-        }, 3000); 
-    } else {
-        document.getElementById('splashScreen').classList.add('hide');
+        }
     }
 });
