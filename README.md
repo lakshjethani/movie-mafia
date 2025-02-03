@@ -68,6 +68,9 @@ The goal of **Movie Mafia** is to leverage the [TMDB API](https://developer.them
 
 ### Key Features  
 
+- **Responsive Design**  
+  - The application is fully **responsive** and works seamlessly on **mobile phones, tablets, and desktops**.  
+
 - **Splash Screen**  
   - A welcome screen appears the first time a user visits the application.  
   - Uses `localStorage` to prevent the splash screen from appearing on subsequent visits.  
